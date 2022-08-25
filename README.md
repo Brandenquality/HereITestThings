@@ -72,5 +72,8 @@ Thankfully, we dont have to code any protocol to connect them each other. But ag
 Now, you can start to code your MCU:
 - First, open your STM32 Cube IDE create a new STM32 project from file segment.  Then click board segment, write your own nucleo boards name, write its type choose it at below and click next.
  ![Selecting Nucleo Board](https://photos.app.goo.gl/xHwghZhkhctndrK58)
-- Then, give a name to your project. Dont forget to choose "C" as your targeted language. Dont change other options, click finnish. You dont have to	 initialize all peripherals with their defult mode but you need to know which pin your LD2 uses in case if you need it later on. 
-- After project is built, 
+- Then, give a name to your project. Dont forget to choose **"C"** as your targeted language. Dont change other options, click finnish. You dont have to	 initialize all peripherals with their defult mode but you need to know which pin your LD2 uses in case if you need it later on. 
+- After project is built, clear you all pinouts. Go to timers part, click **"TIM2"**, then enable clock source as **"Internal Clock"**, at the configuration part, set the **"Prescaler value"** as 48000-1 and **"Counter Period"** as 100-1. Dont forget to enable **"TIM2 global interrupt"** in the NVIC settings.  
+![Timer Settings](https://photos.app.goo.gl/aWLcTsTscxtBWGtN9)  
+- Next, go to Connectivity part, click I2C1, enable I2C as I2C. At user constants, set the **"I2C Speed Mode"** as fast mode plus and speed is 1000 kHz. At same part, click to **"USART1"**, activate its "Mode" as Asynchronous. At user constants, set the **"Baud Rate"** as 115200 Bits/s and you dont have to change any other setting for uart. What we have done in here is we enables I2C communication and UART communication. After this, Cube IDE should set the connection pins for you. You can check them in pinout view. If you want to change the pins you need to look at the pinouts diagram of your board in the internet and then set them by yourself.
+- After this, we need to set the pins that are required to light the LEDs.  
