@@ -4,7 +4,7 @@ In this project, we have done a prototype version of smart automatic water conta
 # Introduction
 What excatly Hydra is? Hydra is a smart automatic water container that is used for pets.  It has many different tecnologies to filter, sterilization, oxidation the water,  With the help of these tecnologies it can purify and can wipe away 99.7% of bacteries in the water.  Moreover, it can show all these features on the mobile app and you can control them. For example you see remaining water level, charge level ,water quality and temperature at the app and you can control filtering, cleaning, temperature (warm or not) of water and use UV lights.    
 # Understanding the Hydra
-In this project, we started to reverse engineer Hydra to find out electronical components. After the process, we find these components that are used in Hydra: 
+In this project, we started to reverse engineering Hydra to find out electronical components. After the process, we find these components that are used in Hydra: 
 |Electronic Components  | Used For |
 |--|--|
 |DC Motor  |To mix the water  |
@@ -55,4 +55,10 @@ First of all, you need to setup the Tuya platform before doing anything. Here ho
 - After that, it wants us to decide smart mode of project. We will choose **"TuyaOS"** and as solution we only have **"Pet Water Feeder"**. Then complete your product informations. You must choose **"Wifi-Bluetooth"** as your protocol. 
 -  Then, it wants us to choose functions that will be used this product. Functions are basically the features that you can see and control in the app. You can choose all of them by clicking all button and then click okay to complete this part.
 ![Functions](https://prnt.sc/4gn626EPeWNO)
-- Afterwards, it will direct us to development page. If you only see the functions, scroll up you  
+- Afterwards, it will direct us to development page. If you only see the functions, scroll up to most top. Here you can see many different menus like function interaction, device interaction and hardware devolopment. 
+- Next, we need to decide control panel of the app. Click **"Device Interaction"** and then at the panel control choose **"All-in One Panel"** as your panel. If you want, you can create your own panel. This completes our app ui and you can test it with Tuya Smart app via QR code. But dont forget we havent done the product yet so its just a visual representation.
+- Now, we can pass to **"Hardware Development"**. In this part we will create our source and library files that are need to code our microcontroller. Click and go to page, select "MCU SDK" as  selected cloud access mode. Then it wants us to select cloud access hardware. We choosed **"WBR3 Wi-fi Bluetooth Module"** but if you want to use an another Tuya communication module module, you can select it in here.  Later, if provides you the files that you need to download. You have to download only **"MCU SDK"** files to complete this project but if you want to look at other you can download them too. 
+![Needed Codes](https://photos.app.goo.gl/gknreDPt6EcK8WF66)
+
+After these steps, you are pretty much done with Tuya IoT platform. After you complete the project you can comeback to platform and can complete the requirements to publish the product.
+
