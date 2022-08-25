@@ -11,7 +11,7 @@ In this project, we started to reverse engineering Hydra to find out electronica
 |LED lights|To show power, wifi connection, 4 different fullness level |
 |Sensors|Temperature, water level, capacitive occupancy |
 |UVC LED|To purify the water|
-|Butons| To open and close|
+|Butons| To turn on and off|
 |Communication Module|To connect with app|
 
 As we mentioned above, the goal of this project is not making the exact same protype of Hydra but making a simplified version of it. The reason for that are education purposes. Moreover, we will not make any mechanical mechanism or design of it.  Its expected to learn how a embaded system works in such devices and being able to communicate smart devices each other properly. Therefore we only built a system that can transfer temperature data to app and get some commands from app.  
