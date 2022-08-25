@@ -23,6 +23,7 @@ As we mentioned above, the goal of this project is not making the exact same pro
 Arcknowledge requirement that are expected to know before starting the project: 
 - Some basic knowledge about microcontroller and embaded systems especially STM32 Nucleo boards.
 - Some basic knowledge about serial communication protocols like I2C, UART and some knowledge about GPIO pins and Timers.
+- Some knowledge about C programming.
 
 Hardware Requirements: 
 - STM32 Nucleo Board (In this project we used "Nucleo F302R8")
@@ -68,4 +69,8 @@ The serial communication protocol between MCU and Tuya modules mostly already re
 ![Serial Communication](https://photos.app.goo.gl/rTvqYAmkp2mhJbNE6) 
 Thankfully, we dont have to code any protocol to connect them each other. But again If you want to learn more about this process you can go and look the serial communication protocol page of Tuya. All communication process is already at   the files we downloaded like mcu_api.c or wifi.h. 
 
-
+Now, you can start to code your MCU:
+- First, open your STM32 Cube IDE create a new STM32 project from file segment.  Then click board segment, write your own nucleo boards name, write its type choose it at below and click next.
+ ![Selecting Nucleo Board](https://photos.app.goo.gl/xHwghZhkhctndrK58)
+- Then, give a name to your project. Dont forget to choose "C" as your targeted language. Dont change other options, click finnish. You dont have to	 initialize all peripherals with their defult mode but you need to know which pin your LD2 uses in case if you need it later on. 
+- After project is built, 
