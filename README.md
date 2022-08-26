@@ -97,10 +97,13 @@ Before starting the codding directly, we want to mention about about some functi
 Now, we can finally code our project:
 - First thing you need to do is including your library files to "main.c". This step is very important and if you miss it, project might not work. You can copy includes below. Copy these includes after **" USER CODE BEGIN Includes"** 
 
-`#include "wifi.h"
+```
+#include "wifi.h"
 #include "protocol.h"
 #include "mcu_api.h"
 #include "system.h"
 #include <stdio.h>
 #include <string.h>
-#include <stdio.h>` 
+#include <stdio.h>
+```
+ 
