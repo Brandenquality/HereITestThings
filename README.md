@@ -37,6 +37,7 @@ Hardware Requirements:
 - AHT10 Temperature Sensor
 >**Note:** You can use a different temperature sensor but you have to know or learn how to use it.
 - WBR3 Tuya Module
+- You might also need solder, multimeter, oscilloscope, power source, logic analyzer and etc. for testing purposes. 
 
 Software requirements:
 - STM32 Cube IDE
@@ -65,7 +66,9 @@ After these steps, you are pretty much done with Tuya IoT platform. After you co
 
 Now, we can dive into communication between MCU and the module. As we mentioned before, you need to download STM32 Cube IDE to complete next parts and a serial monitor program to see does the communication or not. Also you can read the [Tuya Page](https://developer.tuya.com/en/docs/iot/overview-of-migrating-tuyas-mcu-sdk?id=K9hhi0xr5vll9) and [Serial Communication Page of Tuya](https://developer.tuya.com/en/docs/iot/tuya-cloud-universal-serial-port-access-protocol?id=K9hhi0xxtn9cb) for this project, if you want to complete this project by yourself. 
 
-The serial communication protocol between MCU and Tuya modules mostly already ready in the "MCU SDK" files we downloaded before. However we still need to undestand how it works and need to spesify the communication commands or function for our microcontroller. After that we can transfer any data we want and use any transfered data from module. Lets start with how Tuya module and MCU communicates with each other. Tuya module uses UART communication for it and works synchronously. Generally, one command is sent by one side and received by other side. One sides send a command and then waits for a response from other side. If sender does not receive a correct response within a spcific time period, the transmission times out. You can see it in the following figure.
+The serial communication protocol between MCU and Tuya modules mostly already ready in the "MCU SDK" files we downloaded before. However we still need to undestand how it works and need to spesify the communication commands or function for our microcontroller. After that we can transfer any data we want and use any transfered data from module. Lets start with how Tuya module and MCU communicates with each other. Tuya module uses UART communication for it and works synchronously. Generally, one command is sent by one side and received by other side. The tuya communication procedure begin with the tuya . Tuya send and information every 1 second if it is powered. After if the initializition steps 
+  applied correctly , same message would send in every 15 seconds . That mean is your mcu and tuya connected. After this process you can send data by using the tuya's built-in library . You can send the updated datas everywhere in your code at main.c but switch codes have to send in protocol.h file in the switch function . If you dont see the datas that you send via tuya smart app the problem might be the time requirements . If you dont give necessary time for data sending
+process not possible to see your data safely in your app ;
 ![Serial Communication](https://photos.app.goo.gl/rTvqYAmkp2mhJbNE6) 
 Thankfully, we dont have to code any protocol to connect them each other. But again If you want to learn more about this process you can go and look the serial communication protocol page of Tuya. All communication process is already at   the files we downloaded like mcu_api.c or wifi.h. 
 
@@ -73,7 +76,7 @@ Now, you can start to code your MCU:
 - First, open your STM32 Cube IDE create a new STM32 project from file segment.  Then click board segment, write your own nucleo boards name, write its type choose it at below and click next.
  ![Selecting Nucleo Board](https://photos.app.goo.gl/xHwghZhkhctndrK58)
 - Then, give a name to your project. Dont forget to choose **"C"** as your targeted language. Dont change other options, click finnish. You dont have to	 initialize all peripherals with their defult mode but you need to know which pin your LD2 uses in case if you need it later on. 
-- After project is built, clear you all pinouts. Go to timers part, click **"TIM16"**, then enable it via clicking **"Enable"** box, at the configuration part, set the **"Prescaler value"** as "3200-1" and **"Counter Period"** as "65536-1". Dont forget to enable **"TIM16 global interrupt"** in the NVIC settings.  
+- After project is built, clear you all pinouts. Go to timers part, click **"TIM16"**, then enable it via clicking **"Enable"** box, at the configuration part, set the **"Prescaler value"** as "3200-1" and **"Counter Period"** as "65536-1". Dont forget to enable **"TIM16 global interrupt"** in the NVIC settings. If you are interested, the formula for timers is "Value / (Prescalar*Counter)". This gives you the frequency value and 1/frequency is your period.  
 ![Timer Settings](https://photos.app.goo.gl/aWLcTsTscxtBWGtN9)  
 - Then, we need to setup the clock speed and debug mode. To do that go to **"System Core"**, click **"RCC"** and then set **"High Speed Clock(HSE) "** as **"Crystal/Ceramic Resonator"**. This setups your base clock speed. Then to set up the debug mode click to **"SYS"** in same menu, and set **"Debug"** as **"Serial Wire"**.
 - Next, go to Connectivity part, click I2C1, enable I2C as I2C. At user constants, set the **"I2C Speed Mode"** as fast mode plus and speed is 1000 kHz. At same part, click to **"USART1"**, activate its "Mode" as Asynchronous. At user constants, set the **"Baud Rate"** as 115200 Bits/s and you dont have to change any other setting for uart. What we have done in here is we enables I2C communication and UART communication. After this, Cube IDE should set the connection pins for you. You can check them in pinout view. If you want to change the pins you need to look at the pinouts diagram of your board in the internet and then set them by yourself.
@@ -90,9 +93,31 @@ Finally we have reach the most important part of this project, programming. As w
 
 Lets first mention about the MCU SDK files we downloaded in previous segment. If you open this file you see some library files and some c files in the zip. The one that we will code the most between them is **"protocol.c"**. Protocol file contains functions for processing protocol data, you can add or write your own code to enable the connection between MCU and Wi-Fi module. After you setup your peripherals and save your project which is done at previous segment, you need to import the MCU SDK codes to your own project explorer. There are multiple ways to do that. Firstly, you can dirrectly click and drag the codes to your project explorer. But be carefull where you copy the codes. You have to copy the **".c"** files to ">core>Src" folder and your **".h"** or library files to 	"core>Inc" folder. The other way to do that directy opening you own workspace and copying the codes one by one. 
 
-Before starting the codding directly, we want to mention about about some function HAL library uses.
+Before starting the codding directly, we want to mention about about some function HAL library uses:
+> X is the value that you specified.
+HAL_GPIO_TogglePin(GPIOX, GPIO_PIN_X); This code is going to send your pin that you defined 1s and 0s respectively. 
+HAL_GPIO_WritePin(GPIOX,GPIO_PIN_X,SET or RESET) ; This code is going to write 1 or 0 to your pin.
+HAL_GPIO_ReadPin(GPIOX,GPIO_PIN_X) ; This code is going to give you the pin's stuation 
 
-**WAIT FOR REMAININ THEN COPPY HERE THANKS**
+>   You can use the Poll , IT ;
+  Polling :
+ HAL_UART_Transmit(&huartx, buffer , sizeofbuffer ,exception time ) ; This code for transmitting the buffer to your serial port .
+  You can define the buffer like that : uint8_t bufferTX[x] = "       " ;
+  Exception time : This is the time for how much time after the sending process is not send the message properly . 
+ HAL_UART_Receive(&huartx,buffer, sizeofbuffer, exception time) ; 
+
+  >IT : 
+ In this mode we need call the Uart callback and write the code in it . 
+  HAL_UART_Transmit_IT(&huartx,buffer,sizeofbuffer) ; If you write this code ,uart callback going to be activated and goint to do the instructions in it .
+  HAL_UART_Receive_IT(&huartx,buffer,sizeofbuffer) ; If you write this code ,uart callback going to be activated and goint to do the instructions in it .
+    void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart); You need to use this functions before the while(1) ;
+    void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart); You need to use this functions before the while(1) ;
+
+  >-- I2C Codes -- 
+  	HAL_I2C_Master_Transmit_IT(&hi2c1, slave_adress, unique send information, size); 
+        HAL_I2C_Master_Receive_IT(&hi2c1, slave_adress, unique receive information, size); 
+Note : Unique informations is an information that special to every individual device . You can only find the information device's datasheet. 
+
 
 Now, we can finally code our project:
 - First thing you need to do is including your library files to "main.c". This step is very important and if you miss it, project might not work. You can copy includes below. Copy these includes after **" USER CODE BEGIN Includes"** at the top of **"main.c"** .
@@ -122,7 +147,7 @@ long x=0; //used for test purposes you dont have to define this one
   wifi_protocol_init();
   mcu_reset_wifi(); 
   HAL_TIM_Base_Start(&htim16); //starts timer
-  timer_val=__HAL_TIM_GET_COUNTER(&htim16); //the time value of 	  timmer at that time
+  timer_val=__HAL_TIM_GET_COUNTER(&htim16); //the time value of 	   	timmer at that time
   wifi_network_check(); //our own function check it with f3
 ```
 - You can see the wifi network check below. Currently we didnt add any function to see which mode its in but you can initilize them by yourself. Not necessary to complete the project. We only check does the wifi connection exist or not. 
@@ -156,6 +181,10 @@ void wifi_network_check(void){
 #include "main.h"
 extern UART_HandleTypeDef huart2;
 ```
+> **Note:** You might sometimes want to define your variables in other files and you are going to need this for project too. If you use the keyword extern 
+with the variable that you want in the other files it becomes visible at that file and you dont have to declare exception. 
+  Dont add extern keyword in your main.c file .Define it in the file that you want to make it visible and add "main.h" header file in it.
+  
 - Then, we need to start receiving part of UART. You can copy and paste the code below. Paste this code to **"while(1)"** loop in the main function at the "main.c" file.  This code check is there a received data or not and then starts the function.
 ```
 unsigned char Res=0;
@@ -241,3 +270,21 @@ if(warm == 0) {
 
 This completes everything we need to code for this project. Not you can build your project and debug it after the ping connections are done.
 > **Note:** If you get any error while building the project, go to their line and delete them.
+
+Finally, we just have to build our hardware. You can see the pin diagram at the below. Make sure the connections are same with your nucleo board. If not then you need to do your own wiring. 
+
+**IMAGE GELICEK**
+
+And now you can debug the code and start it. In this part you need the **"Tuya Smart"** app to test your work. Download and open it. 
+- Then, open the "Home" part at the app, click the button at the right top. Select **"Add Device"**
+Resimke
+- Wait and see if your phone finds out the connection. If not, then re-debug your code. If it sees the connection then click add in the discovering devices.
+Resimke
+- Then, you wil see your device at add device panel. Click the plus button.
+Resimke
+- It will wants you to connect your device via wifi. Select your wifi and enter your passaport.
+Resimke
+- And finnally you are connected...
+Resimke
+
+Thanks for reading our project. 
