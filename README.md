@@ -95,15 +95,65 @@ Before starting the codding directly, we want to mention about about some functi
 **WAIT FOR REMAININ THEN COPPY HERE THANKS**
 
 Now, we can finally code our project:
-- First thing you need to do is including your library files to "main.c". This step is very important and if you miss it, project might not work. You can copy includes below. Copy these includes after **" USER CODE BEGIN Includes"** 
+- First thing you need to do is including your library files to "main.c". This step is very important and if you miss it, project might not work. You can copy includes below. Copy these includes after **" USER CODE BEGIN Includes"** at the top of **"main.c"** .
 
 ```
 #include "wifi.h"
 #include "protocol.h"
 #include "mcu_api.h"
 #include "system.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdio.h>
 ```
- 
+- Later on, we need to define some variable that are going to used for this project. Open your "main.c" file and copy the codes below to "USER CODE BEGIN 0" part which is at under the library includes.
+```
+//AHT10 variables
+uint8_t AHT10_RX_Data[6];
+uint32_t AHT10_ADC_Raw;
+float AHT10_Temperature=30; //Temperature variable
+uint8_t AHT10_TmpHum_Cmd[3]={0xAC, 0x33, 0x00};
+
+#define AHT10_ADRESS (0x38<<1) //AHT10 ADRESS
+//aditional variables
+uint8_t AHT10_Switcher=255;
+long x=0; //used for test purposes you dont have to define this one
+```
+ - Then, if you check Tuya's site, you can see it explains the macro definitions in **"protocol.h"**. We are not going to mention about them but if you want to check it [here.](https://developer.tuya.com/en/docs/iot/overview-of-migrating-tuyas-mcu-sdk?id=K9hhi0xr5vll9) These macro defination done by Tuya IoT platform so we dont have to change anything manually.
+ - Now we can move on to function calls. The first function we need to call is "wifi_protocol_init()". It basically initilizes protocols that are required to start wifi. Call this function after peripherals are initialized where it says **"USER CODE BEGIN 2"**.  Also call some other functions too. "mcu_reset_wifi" function reset the wifi connection, hal function starts the timer and "wifi_network_check" is private function that we coded. It checks does the wifi connection exist or not.  You can coppy the code below,
+ ```
+  wifi_protocol_init();
+  mcu_reset_wifi(); 
+  HAL_TIM_Base_Start(&htim16); //starts timer
+  timer_val=__HAL_TIM_GET_COUNTER(&htim16); //the time value of 	  timmer at that time
+  wifi_network_check(); //our own function check it with f3
+```
+- You can see the wifi network check below. Currently we didnt add any function to see which mode its in but you can initilize them by yourself. Not necessary to complete the project. We only check does the wifi connection exist or not. 
+ ```
+void wifi_network_check(void){
+	switch(mcu_get_wifi_work_state())
+		 {
+		  		case SMART_CONFIG_STATE:
+		  						   // In EZ mode, the LED flickers quickly.
+		  		break;
+		  		case AP_STATE:
+		  						// In AP mode, the LED flickers slowly.
+		  		break;
+		  		case WIFI_NOT_CONNECTED:
+		  						// The Wi-Fi network has been set up and is connecting to the router. The LED is off.
+		  		break;
+		  		case WIFI_CONNECTED:
+		  						   // The Wi-Fi network is connected to the router. The LED is steady on.
+		  			HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_13);
+		  		break;
+		  		default:break;
+		 }
+}
+```
+- The next thing we need to set is **"uart_transmit_output"** function in the **"protocol.c"** file. Open protocol.c file at the "Src" folder and then copy paste the code below. This code is UART transmision code for project. We dont have to call "uart_transmit_function" at anywhere. Other ".c" files we copied will use it. Dont forget to delete **#error** line otherwise it will send a error to our console. Also to work this code properly we need to include "main.h" library to "protocol.c" file. You can copy it below. Paste these codes to top of the file. 
+ ```
+ HAL_UART_Transmit(&huart2, (unsigned char *)&value , 1, 0xffff);
+```
+```
+#include "wifi.h"
+#include "main.h"
+extern UART_HandleTypeDef huart2;
+```
+- 
