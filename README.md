@@ -238,3 +238,6 @@ if(warm == 0) {
     	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,SET);
     }
 ```
+
+This completes everything we need to code for this project. Not you can build your project and debug it after the ping connections are done.
+> **Note:** If you get any error while building the project, go to their line and delete them.
