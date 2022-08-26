@@ -73,7 +73,34 @@ Now, you can start to code your MCU:
 - First, open your STM32 Cube IDE create a new STM32 project from file segment.  Then click board segment, write your own nucleo boards name, write its type choose it at below and click next.
  ![Selecting Nucleo Board](https://photos.app.goo.gl/xHwghZhkhctndrK58)
 - Then, give a name to your project. Dont forget to choose **"C"** as your targeted language. Dont change other options, click finnish. You dont have to	 initialize all peripherals with their defult mode but you need to know which pin your LD2 uses in case if you need it later on. 
-- After project is built, clear you all pinouts. Go to timers part, click **"TIM2"**, then enable clock source as **"Internal Clock"**, at the configuration part, set the **"Prescaler value"** as 48000-1 and **"Counter Period"** as 100-1. Dont forget to enable **"TIM2 global interrupt"** in the NVIC settings.  
+- After project is built, clear you all pinouts. Go to timers part, click **"TIM16"**, then enable it via clicking **"Enable"** box, at the configuration part, set the **"Prescaler value"** as "3200-1" and **"Counter Period"** as "65536-1". Dont forget to enable **"TIM16 global interrupt"** in the NVIC settings.  
 ![Timer Settings](https://photos.app.goo.gl/aWLcTsTscxtBWGtN9)  
+- Then, we need to setup the clock speed and debug mode. To do that go to **"System Core"**, click **"RCC"** and then set **"High Speed Clock(HSE) "** as **"Crystal/Ceramic Resonator"**. This setups your base clock speed. Then to set up the debug mode click to **"SYS"** in same menu, and set **"Debug"** as **"Serial Wire"**.
 - Next, go to Connectivity part, click I2C1, enable I2C as I2C. At user constants, set the **"I2C Speed Mode"** as fast mode plus and speed is 1000 kHz. At same part, click to **"USART1"**, activate its "Mode" as Asynchronous. At user constants, set the **"Baud Rate"** as 115200 Bits/s and you dont have to change any other setting for uart. What we have done in here is we enables I2C communication and UART communication. After this, Cube IDE should set the connection pins for you. You can check them in pinout view. If you want to change the pins you need to look at the pinouts diagram of your board in the internet and then set them by yourself.
-- After this, we need to set the pins that are required to light the LEDs.  
+- Afterwards, we need to set the pins that are required to light the LEDs. We need 3 GPIO pins and a LD2 pin to complete this project but if you want to add more you can. At "Pinout view" find PA5, PA6 and PA7 pins (for f302r8 they are at bottom). Click them and set them as **"GPIO_Output"** If you have a different nucleo board than F302R8 then please sets your own pins by yourself. For LD2 green led you have to know which pin your nucleo board uses so go and check pinout of your nucleo board. Set that pin as "GPIO_Output" too. 
+![GPIO Pins](https://photos.app.goo.gl/uxtUkPot9NZ6f9Sd7)
+
+These setting are enough for your peripherals configuration. Now, you can save your project and it will update and open **"main.c"** file. We are going to use this file a lot and its expected to you have some understanding about the structure of this file.
+
+Now, 
+**Waiting for codes please update here later on**
+
+# Coding
+Finally we have reach the most important part of this project, programming. As we mentioned before, we used [Tuya's own developer site](https://developer.tuya.com/en/docs/iot/overview-of-migrating-tuyas-mcu-sdk?id=K9hhi0xr5vll9) to code this project. Therefore, you can check this site and try to code the project by yourself.
+
+Lets first mention about the MCU SDK files we downloaded in previous segment. If you open this file you see some library files and some c files in the zip. The one that we will code the most between them is **"protocol.c"**. Protocol file contains functions for processing protocol data, you can add or write your own code to enable the connection between MCU and Wi-Fi module. After you setup your peripherals and save your project which is done at previous segment, you need to import the MCU SDK codes to your own project explorer. There are multiple ways to do that. Firstly, you can dirrectly click and drag the codes to your project explorer. But be carefull where you copy the codes. You have to copy the **".c"** files to ">core>Src" folder and your **".h"** or library files to 	"core>Inc" folder. The other way to do that directy opening you own workspace and copying the codes one by one. 
+
+Before starting the codding directly, we want to mention about about some function HAL library uses.
+
+**WAIT FOR REMAININ THEN COPPY HERE THANKS**
+
+Now, we can finally code our project:
+- First thing you need to do is including your library files to "main.c". This step is very important and if you miss it, project might not work. You can copy includes below. Copy these includes after **" USER CODE BEGIN Includes"** 
+
+`#include "wifi.h"
+#include "protocol.h"
+#include "mcu_api.h"
+#include "system.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdio.h>` 
