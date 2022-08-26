@@ -156,4 +156,85 @@ void wifi_network_check(void){
 #include "main.h"
 extern UART_HandleTypeDef huart2;
 ```
-- 
+- Then, we need to start receiving part of UART. You can copy and paste the code below. Paste this code to **"while(1)"** loop in the main function at the "main.c" file.  This code check is there a received data or not and then starts the function.
+```
+unsigned char Res=0;
+if((USART2->ISR&UART_FLAG_RXNE) != 0)
+	{
+		Res=USART2->RDR;
+		uart_receive_input(Res);
+	}
+```
+- Then, we need to call function that are required to start wifi services. You can copy and paste them from below. You have to call this function at "while(1)" loop at same main body.
+```
+wifi_uart_service();
+```
+> Note: After this part you can test your connection with connecting a serial to usb converter to your circuit. 
+
+  We have done the function calls that are required to start connection for UART and wifi. Now lets talk about how our data transmitted to app. As we done before "uart_transmit_output" function at the "protocol.c" file sends the data to module and module sends this via wifi and bluetooth connection. So we only have to understand how data stored in Tuya. As you remember, when we initilized the project at the Tuya, we selected some functions to use. Within this functions, there are variables called DP data. This DP's already defined in the "protocol.h" so we dont have to define them but you have to know which one is used for which UI at the app. The only one we are going to use is here "DPID_TEMP_CURRENT". This DP carries the temperature data to app. 
+  - Therefore the first thing we need to code is measuring the temperature data from AHT10 sensor. You have to use I2C connection for AHT10 sensor. We already defined some variables that is necessary for us at the above part. So we just have to start I2C connection. You can copy and paste the code below. This code starts transmits the temperature data from AHT10. But you can not send this data continuesly. You have to add some delays between your readings but using delay in this project will cause the UART connection to cut.  Therefore, we will use the timer. We already readed the time data in above for that moment. If we read the time data from timer again in the "while(1)" loop and subtract this two time data from each other we can measure the time has passed until that time and then we can update the first data time to move on. With a help of if function we can create a condition of delay without delaying any other process. We are going to check the temperature data at every 250 miliseconds. You need to paste this code at the top of **"while(1)"*** loop at the main body. **"AHT10_Temperature"** variable is going to be our temperature data
+```
+if(__HAL_TIM_GET_COUNTER(&htim16) - timer_val >= 2500){
+		  if(AHT10_Switcher){
+	  			HAL_I2C_Master_Transmit_IT(&hi2c1,AHT10_ADRESS,(uint8_t*)AHT10_TmpHum_Cmd,3);
+	  			}
+		  else {
+	  			HAL_I2C_Master_Receive_IT(&hi2c1,AHT10_ADRESS,(uint8_t*)AHT10_RX_Data,6);
+	  			}
+		  if(~AHT10_RX_Data[0] & 0x80){
+	  			//Convert temperature
+	  			AHT10_ADC_Raw=(((uint8_t)AHT10_RX_Data[3] & 15) << 16) | ((uint8_t)AHT10_RX_Data[4]<<8) | AHT10_RX_Data[5];
+	  			AHT10_Temperature = (float)(AHT10_ADC_Raw*200.00/1048576.00)-50.00;
+
+		  	  }
+		  AHT10_Switcher = ~AHT10_Switcher;
+	  }  
+```
+- Now, we can send this data as DP to app via the code below. Again we need to make our own delay otherwise the connection between MCU and Tuya will be cutted. We will send this DP at every 1.3 seconds.
+```
+if(__HAL_TIM_GET_COUNTER(&htim16) - timer_val >= 13000){
+		/* x=x+10; // this is for testing purposes dont have to write
+		if(x==50){ 
+			x=0;
+		} */
+		mcu_dp_value_update(DPID_TEMP_CURRENT,AHT10_Temperature); //VALUE type data report;
+		timer_val=__HAL_TIM_GET_COUNTER(&htim16);
+	}
+```
+- Then, if you check the Tuya developer guide, it wants you to update all the DP'es at the "all_data_update()" function at the "protocol.c". However since  we already updating this data at our main body we dont have to initilize anything in this function.
+
+ Afterwards, you need to get DP commands from app and make some actions acording to this DP'es. This receiving data part already done by Tuya so we just have to find the functions we need to use and call the functions required to do action.
+ - We will only use **"dp_download_filter_reset_handle"**,  **"dp_download_uv_handle"** and **"dp_download_warm_handle"** functions in this project. Every one of them will light a different LED acourding to readed data from Tuya. You can see which function is for which parameter at below,
+ 
+| Function | Parameter |
+|--|--|
+|dp_download_filter_reset_handle  | Filter reset condition |
+|dp_download_uv_handle | UV working condition|
+|dp_download_warm_handle|The warming process condition|
+
+- Now, you need to go to "protocol.c" file and find these function. You can press control+f to search them with their names. In these functions, we dont have to change anything but need to add our GPIO functions. You can copy and paste them below. Reset ones disables the pins and set pins enable them.
+- This code for "dp_download_filter_reset_handle" function:
+```
+if(filter_reset == 0) {
+        HAL_GPIO_WritePin(GPIOA,GPIO_PIN_7,GPIO_PIN_RESET);
+    }else {
+        HAL_GPIO_WritePin(GPIOA,GPIO_PIN_7,GPIO_PIN_SET);
+
+    }
+```
+- This one for "dp_download_uv_handle": 
+```
+    if(uv == 0) {
+        HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,RESET);
+    }else {
+    	 HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,SET);
+    
+```
+- And last one for "dp_download_warm_handle":
+```
+if(warm == 0) {
+    	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,RESET);
+    }else {
+    	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,SET);
+    }
+```
