@@ -51,16 +51,16 @@ You might ask what is exactly Tuya is? Tuya is global IoT devolopment platform s
 First of all, you need to setup the Tuya platform before doing anything. Here how you can setup your product development in Tuya:
 - Go to Tuya IoT Platform Page from [here.](https://auth.tuya.com/?from=https://iot.tuya.com/) Sign up and create an account for yourself. 
 - After you sign in, you can see many different features that is provided by Tuya. We will only deal with product development. Therefore, scroll a bit in the page and you can see the developer console. Select smart product development and create a new one.
-![Developer Console](https://photos.app.goo.gl/5gUNtXUGLK57TxEK8)
+![Developer Console](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/image%20(3).png)
 - Then, at select product part, choose "Small Home Appliances" at the standart category. Scroll down until you see **"Animals & Plants"**  menu and then choose **"Pet Fountain"** as product.
-![Product](https://prnt.sc/S2y3UTnPErgR)
+![Product](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/indir%20(2)%20(1).png)
 - After that, it wants us to decide smart mode of project. We will choose **"TuyaOS"** and as solution we only have **"Pet Water Feeder"**. Then complete your product informations. You must choose **"Wifi-Bluetooth"** as your protocol. 
 -  Then, it wants us to choose functions that will be used this product. Functions are basically the features that you can see and control in the app. You can choose all of them by clicking all button and then click okay to complete this part.
-![Functions](https://prnt.sc/4gn626EPeWNO)
+![Functions](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/indir%20(4)%20(1).png)
 - Afterwards, it will direct us to development page. If you only see the functions, scroll up to most top. Here you can see many different menus like function interaction, device interaction and hardware devolopment. 
 - Next, we need to decide control panel of the app. Click **"Device Interaction"** and then at the panel control choose **"All-in One Panel"** as your panel. If you want, you can create your own panel. This completes our app ui and you can test it with Tuya Smart app via QR code. But dont forget we havent done the product yet so its just a visual representation.
 - Now, we can pass to **"Hardware Development"**. In this part we will create our source and library files that are need to code our microcontroller. Click and go to page, select "MCU SDK" as  selected cloud access mode. Then it wants us to select cloud access hardware. We choosed **"WBR3 Wi-fi Bluetooth Module"** but if you want to use an another Tuya communication module module, you can select it in here.  Later, if provides you the files that you need to download. You have to download only **"MCU SDK"** files to complete this project but if you want to look at other you can download them too. 
-![Needed Codes](https://photos.app.goo.gl/gknreDPt6EcK8WF66)
+![Needed Codes](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/chooseMcuSDK.jpg)
 
 After these steps, you are pretty much done with Tuya IoT platform. After you complete the project you can comeback to platform and complete the requirements to publish the product.
 
@@ -69,19 +69,19 @@ Now, we can dive into communication between MCU and the module. As we mentioned 
 The serial communication protocol between MCU and Tuya modules mostly already ready in the "MCU SDK" files we downloaded before. However we still need to undestand how it works and need to spesify the communication commands or function for our microcontroller. After that we can transfer any data we want and use any transfered data from module. Lets start with how Tuya module and MCU communicates with each other. Tuya module uses UART communication for it and works synchronously. Generally, one command is sent by one side and received by other side. The tuya communication procedure begin with the tuya . Tuya send and information every 1 second if it is powered. After if the initializition steps 
   applied correctly , same message would send in every 15 seconds . That mean is your mcu and tuya connected. After this process you can send data by using the tuya's built-in library . You can send the updated datas everywhere in your code at main.c but switch codes have to send in protocol.h file in the switch function . If you dont see the datas that you send via tuya smart app the problem might be the time requirements . If you dont give necessary time for data sending
 process not possible to see your data safely in your app ;
-![Serial Communication](https://photos.app.goo.gl/rTvqYAmkp2mhJbNE6) 
+![Serial Communication](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/Cat-MCU-Module%20(1).png) 
 Thankfully, we dont have to code any protocol to connect them each other. But again If you want to learn more about this process you can go and look the serial communication protocol page of Tuya. All communication process is already at   the files we downloaded like mcu_api.c or wifi.h. 
 
 Now, you can start to code your MCU:
 - First, open your STM32 Cube IDE create a new STM32 project from file segment.  Then click board segment, write your own nucleo boards name, write its type choose it at below and click next.
- ![Selecting Nucleo Board](https://photos.app.goo.gl/xHwghZhkhctndrK58)
+ ![Selecting Nucleo Board](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/Screenshot_2.jpg)
 - Then, give a name to your project. Dont forget to choose **"C"** as your targeted language. Dont change other options, click finnish. You dont have to	 initialize all peripherals with their defult mode but you need to know which pin your LD2 uses in case if you need it later on. 
 - After project is built, clear you all pinouts. Go to timers part, click **"TIM16"**, then enable it via clicking **"Enable"** box, at the configuration part, set the **"Prescaler value"** as "3200-1" and **"Counter Period"** as "65536-1". Dont forget to enable **"TIM16 global interrupt"** in the NVIC settings. If you are interested, the formula for timers is "Value / (Prescalar*Counter)". This gives you the frequency value and 1/frequency is your period.  
-![Timer Settings](https://photos.app.goo.gl/aWLcTsTscxtBWGtN9)  
+![Timer Settings](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/image%20(2).png)  
 - Then, we need to setup the clock speed and debug mode. To do that go to **"System Core"**, click **"RCC"** and then set **"High Speed Clock(HSE) "** as **"Crystal/Ceramic Resonator"**. This setups your base clock speed. Then to set up the debug mode click to **"SYS"** in same menu, and set **"Debug"** as **"Serial Wire"**.
 - Next, go to Connectivity part, click I2C1, enable I2C as I2C. At user constants, set the **"I2C Speed Mode"** as fast mode plus and speed is 1000 kHz. At same part, click to **"USART1"**, activate its "Mode" as Asynchronous. At user constants, set the **"Baud Rate"** as 115200 Bits/s and you dont have to change any other setting for uart. What we have done in here is we enables I2C communication and UART communication. After this, Cube IDE should set the connection pins for you. You can check them in pinout view. If you want to change the pins you need to look at the pinouts diagram of your board in the internet and then set them by yourself.
 - Afterwards, we need to set the pins that are required to light the LEDs. We need 3 GPIO pins and a LD2 pin to complete this project but if you want to add more you can. At "Pinout view" find PA5, PA6 and PA7 pins (for f302r8 they are at bottom). Click them and set them as **"GPIO_Output"** If you have a different nucleo board than F302R8 then please sets your own pins by yourself. For LD2 green led you have to know which pin your nucleo board uses so go and check pinout of your nucleo board. Set that pin as "GPIO_Output" too. 
-![GPIO Pins](https://photos.app.goo.gl/uxtUkPot9NZ6f9Sd7)
+![GPIO Pins](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/image%20(1).png)
 
 These setting are enough for your peripherals configuration. Now, you can save your project and it will update and open **"main.c"** file. We are going to use this file a lot and its expected to you have some understanding about the structure of this file.
 
