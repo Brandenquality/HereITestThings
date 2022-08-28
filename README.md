@@ -277,18 +277,23 @@ Finally, we just have to build our hardware. You can see the pin diagram at the 
 
 And now you can debug the code and start it. In this part you need the **"Tuya Smart"** app to test your work. Download and open it. 
 - Then, open the "Home" part at the app, click the button at the right top. Select **"Add Device"**
+
 ![Home Menu](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/S1.jpg)
 
 - Wait and see if your phone finds the connection. If not, then re-debug your code. If it sees the connection then click add in the discovering devices.
+
 ![Add Device](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/S1_2.jpg)
 
 - Then, you wil see your device at add device panel. Click the plus button.
+
 ![Add Device 2](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/S2.jpg)
 
 - It will wants you to connect your device via wifi. Select your wifi and enter your passaport.
+
 ![Wifi Informations](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/S3.jpg)
 
 - And finnally you are connected...
+
 ![Device Panel](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/WhatsApp%20Image%202022-08-28%20at%2016.59.20%20(1).jpeg)
 
 Thanks for reading our project. 
