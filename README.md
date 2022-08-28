@@ -272,8 +272,8 @@ This completes everything we need to code for this project. Not you can build yo
 > **Note:** If you get any error while building the project, go to their line and delete them.
 
 Finally, we just have to build our hardware. You can see the pin diagram at the below. Make sure the connections are same with your nucleo board. If not then you need to do your own wiring. 
-
-**IMAGE GELICEK**
+> **Note:** If you have used different pinouts you need to organize your own pin by yourself. 
+![Hardware](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/WhatsApp%20Image%202022-08-28%20at%2016.59.55.jpeg)
 
 And now you can debug the code and start it. In this part you need the **"Tuya Smart"** app to test your work. Download and open it. 
 - Then, open the "Home" part at the app, click the button at the right top. Select **"Add Device"**
