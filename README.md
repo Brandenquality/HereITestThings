@@ -16,7 +16,7 @@ In this project, we started to reverse engineering Hydra to find out its electro
 
 As we mentioned above, the goal of this project is not making the exact same protype of Hydra but making a simplified version of it. The reason for that are education purposes. Moreover, we will not make any mechanical mechanism or design of it.  Its expected to learn how a embaded system works in such devices and being able to communicate smart devices each other properly. Therefore, we only built a system that can transfer temperature data to an app and get some commands from an app.  
 
-![Hydra made by Bllicra](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/110000023109943.jpg) ![Prototype made by us](https://photos.app.goo.gl/fMEzrB1zA3G8A78v7)
+![Hydra made by Bllicra](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/110000023109943.jpg) ![Prototype made by us](https://github.com/Brandenquality/SecretFiles/blob/main/Fotolar/Finalproject.jpeg)
 
 # Reqiurements
 
